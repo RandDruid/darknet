@@ -17,6 +17,9 @@ namespace Darknet
         [DllImport(YoloLibraryName, EntryPoint = "detect_mat")]
         private static extern int DetectImage(IntPtr pArray, int nSize, ref BboxContainer container);
 
+        [DllImport(YoloLibraryName, EntryPoint = "detect_mat_raw")]
+        internal static extern int DetectImage(int rows, int cols, int type, IntPtr data, ref BboxContainer container);
+
         [DllImport(YoloLibraryName, EntryPoint = "dispose")]
         private static extern int DisposeYolo();
 
@@ -82,6 +85,27 @@ namespace Darknet
                 // Free the unmanaged memory.
                 Marshal.FreeHGlobal(pnt);
             }
+
+            return container.candidates;
+        }
+
+        public bbox_t[] Detect()
+        {
+            var container = new BboxContainer();
+
+            int CV_8UC3 = 16;  // OpenCV constant
+
+            // using Emgu.CV;   // www.emgucv.com - cross platform .Net wrapper to the OpenCV image processing library.
+
+            // Image<Bgr, byte> cvBitmap = new Image<Bgr, byte>(640, 480);
+            // Image<Bgr, byte> cvBitmap = new Image<Bgr, byte>(System.Drawing.Bitmap bmp);
+            // Image<Bgr, byte> cvBitmap = new Image<Bgr, byte>(string fileName);
+            // etc..
+            // 
+            //
+            // Mat mat = cvBitmap.Mat;
+
+            // int count = DetectImage(mat.Rows, mat.Cols, CV_8UC3, mat.DataPointer, ref container);
 
             return container.candidates;
         }

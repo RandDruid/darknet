@@ -55,6 +55,19 @@ int detect_mat(const uint8_t* data, const size_t data_length, bbox_t_container &
 #endif    // OPENCV
 }
 
+int detect_mat_raw(const int rows, const int cols, const int type, const uint8_t* data, bbox_t_container& container) {
+#ifdef OPENCV
+    cv::Mat image = cv::Mat(rows, cols, type, (void*)data);
+
+    std::vector<bbox_t> detection = detector->detect(image);
+    for (size_t i = 0; i < detection.size() && i < C_SHARP_MAX_OBJECTS; ++i)
+        container.candidates[i] = detection[i];
+    return detection.size();
+#else
+    return -1;
+#endif    // OPENCV
+}
+
 int dispose() {
     //if (detector != NULL) delete detector;
     //detector = NULL;
